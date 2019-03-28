@@ -6,10 +6,11 @@
  * @brief The purpose of this file is to set up a shell-like management interface in which the memory, defined 
  *  at program launch, limits the possibilities of manipulation within the directory.
  *  The user will therefore be able to perform operations such as: 
- *	-viewing file data 
- *	-copy a file and paste it in another position
- *	-the creation of a file or folder inside the management directory 
- *	-delete some data
+ *	<li>viewing file data </li>
+ *	<li>copy a file and paste it in another position</li>
+ *	<li>the creation of a file or folder inside the management directory </li>
+ *	<li>delete some data</li>
+ *
  * @file =main.c
  *
  * @see partition.h
@@ -34,7 +35,11 @@
 #define RED "\033[0;31m" // simple red
 #define RED_BOLD "\033[1;31m"//bold red
 #define RESET_COLOR "\033[0m"
-
+/*!
+ * @brief Here, the program starts an infinite loop that simulates the control interface and waits 
+ * for the user to enter his order. This is then separated into arg1 arg2 command to easily 
+ * launch the associated function.
+ */
 int main(int argc, char ** argv) 
 {
   if (argc != 2) { exitError(RED_BOLD"Utilisation : ./creat <Nom Partition>)"RESET_COLOR); }

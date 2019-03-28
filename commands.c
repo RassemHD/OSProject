@@ -2,8 +2,18 @@
  * @file command.c
  * @version 4
  * @author Saint-Amand Matthieu, Castelain Julien, Hachoud Rassem
- * @brief 
- *
+ * @brief This file contains all the file management functions. Each command is then called by view.c which breaks down the string into command + arguments for sending it here. 
+ *<ul>
+ *<li>void cat(int partition, int NumeroBlock); </li>
+ *<li>void ls(int partition, int NumeroBlock);</li>
+ *<li>void rm(int partition, int RepertoirParent, char *name);</li>
+ *<li>int mkdir(int score, int RepertoirParent, char *name);</li>
+ *<li>void pwd(int partition, int RepertoirCourant);</li>
+ *<li>int cp(int partition, int RepertoirParent);</li>
+ *<li>int past(int partition, int RepertoirPere, int original_ID);</li>
+ *<li>int pastFolder(int partition, int RepertoirPere, int original_ID);</li>
+ *<li>int cd(int partition, int RepertoirCourant);</li>
+ *</ul>
  * @see partition.h
  * @see partition.h
  * @see command.h
@@ -26,7 +36,7 @@
 #define WHITE "\x1b[37m"
 #define RED "\033[0;31m"
 #define RESET_COLOR "\033[0m"
-// Affiche le contenu d'un REPERTOIRE passé en argument
+/*! @brief Affiche le contenu d'un REPERTOIRE passé en argument */
 void ls(int partition, int NumeroBloc)
 {
     Bloc bloc=READ(partition, NumeroBloc);
@@ -50,7 +60,7 @@ void ls(int partition, int NumeroBloc)
 	else {printf("\n");}
 }
 
-// Affiche le contenu d'un FICHIER passé en argument
+/*! @brief Affiche le contenu d'un FICHIER passé en argument */
 void cat(int partition, int NumeroBloc)
 {
     Bloc bloc;
@@ -62,7 +72,7 @@ void cat(int partition, int NumeroBloc)
 
 }
 
-// Supprimme un élémet (dossier ou fichier) d'un Répertoir
+/*! @brief Supprimme un élémet (dossier ou fichier) d'un Répertoire */
 void rm(int partition, int RepertoirParent, char *nom)
 {
   Bloc bloc;
@@ -81,7 +91,7 @@ void rm(int partition, int RepertoirParent, char *nom)
 		}
 	}
 
-// creation dossier
+/*! @brief creation dossier */
 int mkdir(int partition, int RepertoirParent, char *nom)
 { 
   Bloc bloc;
@@ -98,7 +108,7 @@ int mkdir(int partition, int RepertoirParent, char *nom)
 	}
 }
 
-// changer repertoire
+/*! @brief changer repertoire */
 int cd(int partition, int RepertoirCourant)
 {
   char nom[MAXNOMFICHIER];
@@ -133,7 +143,7 @@ int cd(int partition, int RepertoirCourant)
   
   
 }
-// Affichage du répertoire courant actuelle 
+/*! @brief Affichage du répertoire courant actuelle */
 void pwd(int partition, int RepertoirCourant)
 {
 	printf("\nuser:/Home");
@@ -145,7 +155,7 @@ void pwd(int partition, int RepertoirCourant)
 	printf("$>");
 }
 
-// copier fichier
+/*! @brief copier fichier */
 int cp(int partition, int RepertoirParent)
 {
   char nom[MAXNOMFICHIER];

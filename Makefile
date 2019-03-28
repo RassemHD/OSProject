@@ -1,4 +1,7 @@
-all: creat view
+all: creat view doc
+
+doc : view.c partition.c utils.c creat.c commands.c
+	doxygen view.c partition.c utils.c creat.c commands.c
 
 partition.o: partition.c utils.c partition.h utils.h
 	gcc -c partition.c
