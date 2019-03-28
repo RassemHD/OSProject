@@ -1,3 +1,12 @@
+/*!
+ * @file main.c
+ * @version 4
+ * @author Saint-Amand Matthieu, Castelain Julien, Hachoud Rassem
+ * @brief 
+ *
+ * @see utils.h
+ * @see partition.h
+ */
 #include <stdlib.h>
 #include <fcntl.h>
 #include <sys/types.h>
@@ -6,6 +15,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+
 #include "partition.h"
 #include "utils.h"
 

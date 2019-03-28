@@ -1,3 +1,21 @@
+/*!
+ * @file view.c
+ *
+ * @version 4
+ * @author Saint-Amand Matthieu, Castelain Julien, Hachoud Rassem
+ * @brief The purpose of this file is to set up a shell-like management interface in which the memory, defined 
+ *  at program launch, limits the possibilities of manipulation within the directory.
+ *  The user will therefore be able to perform operations such as: 
+ *	-viewing file data 
+ *	-copy a file and paste it in another position
+ *	-the creation of a file or folder inside the management directory 
+ *	-delete some data
+ * @file =main.c
+ *
+ * @see partition.h
+ * @see utils.h
+ * @see command.h
+ */
 #include <stdlib.h>
 #include <fcntl.h>
 #include <sys/types.h>
@@ -6,64 +24,92 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+
 #include "partition.h"
 #include "utils.h"
 #include "commands.h"
 
+#define DIM 300
+#define CYAN "\033[1;36m" // Bold cyan
+#define RED "\033[0;31m" // simple red
+#define RED_BOLD "\033[1;31m"//bold red
+#define RESET_COLOR "\033[0m"
 
 int main(int argc, char ** argv) 
 {
-  if (argc != 2) { exitError("Utilisation : ./creat <Nom Partition>)"); }
+  if (argc != 2) { exitError(RED_BOLD"Utilisation : ./creat <Nom Partition>)"RESET_COLOR); }
  
   int partition = open(argv[1], O_RDWR);
-  char nom[MAXNOMFICHIER]; 
   int b=1;
-  char nombloc[MAXNOMFICHIER];
-  char menu[10];
   int RepertoirCourant =0;
   int Copie=-1;
 
+	/* for each command and each arguments associated */
+	char line[1024];
+	char cmd[1024];
+	char arg1[1024];
+	char arg2[1024];
+	int cursor, result, args;
+
   printf("Commandes :\n dossier => Création d'un dossier\n");
-	printf("delete=>Supprimme un élément du répertoir\n ls => Affiche contenu répertoir\n");
+	printf(" delete=>Supprimme un élément du répertoire\n ls => Affiche contenu répertoire\n");
 
-	while(b>0)
-	{
-	pwd(partition,RepertoirCourant);			   
-	fgets(menu,10,stdin);   
-	strtok(menu, "\n");
+	while(b>0){
+		pwd(partition,RepertoirCourant);			   
+		fflush(stdout);
+		if(!fgets(line,sizeof(line),stdin)) break;
 
-	if (strcmp(menu, "dossier") == 0) 
-    { 
-      	 mkdir(partition, RepertoirCourant);
-    } 
-    else if (strcmp(menu, "delete") == 0)
-    {
-         rm(partition, RepertoirCourant);
-    }
-    else if (strcmp(menu, "ls") == 0)
-    {
-         ls(partition, RepertoirCourant);
-    }		
-    else if (strcmp(menu, "cd") == 0)
-    {
-         RepertoirCourant = cd(partition, RepertoirCourant);
-    }
-	  else if (strcmp(menu, "copier") == 0)
-    {
-         Copie = cp(partition, RepertoirCourant);
-    }
-	  else if (strcmp(menu, "coller") == 0)
-    {
-         past(partition, RepertoirCourant, Copie);
-    }	
-    else if (strcmp(menu, "exit") == 0)
-    {  
-        b=-1;
-    }
-	  else{
-      printf("La commande '%s' n'est pas reconnue",menu);}
+		if(line[0]=='\n') continue;
+		line[strlen(line)-1] = 0;
+		/* 
+		* In this case, we separate the command with 3 strings of character to use it easily		
+		*/
+		args = sscanf(line,"%s %s %s",cmd,arg1,arg2);
+		if(args==0) continue;
+
+		if(!strcmp(cmd,"dossier")) {
+			if(args==2){
+				mkdir(partition, RepertoirCourant, arg1);
+			}else{
+				printf(RED_BOLD "Commande : dossier <nomDossier>" RESET_COLOR);
+			}
+		}else if(!strcmp(cmd,"delete")) {
+			if(args==2){
+				rm(partition, RepertoirCourant,arg1);
+			}else{
+				printf(RED_BOLD "Commande : delete <nomDossier>" RESET_COLOR);
+			}
+		}else if(!strcmp(cmd,"cd")) {
+  		    RepertoirCourant = cd(partition, RepertoirCourant);
+		}else if(!strcmp(cmd,"copy")) {
+     		    Copie = cp(partition, RepertoirCourant);
+		}else if(!strcmp(cmd,"paste")) {
+     		    past(partition, RepertoirCourant, Copie);
+		}else if(!strcmp(cmd,"ls")) {
+     		    ls(partition, RepertoirCourant);
+		}else if(!strcmp(cmd,"delete")) {
+
+		}else if(!strcmp(cmd,"help")) {
+			printf("Commands are:\n");
+			printf("    dossier <name_file>\n");
+			printf("    copy : indicate the source file then indicate the target file\n");
+			printf("    delete <name_file>\n");
+			printf("    cd\n");
+			printf("    paste\n");
+			printf("    ls\n");
+			printf("    help\n");
+			printf("    quit\n");
+			printf("    exit\n");
+		} else if(!strcmp(cmd,"quit")) {
+			b=0;
+		} else if(!strcmp(cmd,"exit")) {
+			b=0;
+		} else {
+			printf(RED"Unknown command: %s\n"RESET_COLOR,cmd);
+			printf(RED_BOLD"Type 'help' for a list of commands.\n"RESET_COLOR);
+		}
 	}
-
+	printf(CYAN "Disconnected\n" RESET_COLOR);
   close(partition);
   return 0;
 }

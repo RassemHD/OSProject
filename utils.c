@@ -1,3 +1,10 @@
+/*!
+ * @file main.c
+ *
+ *
+ * @see partition.h
+ * @see command.h
+ */
 #include <stdlib.h>
 #include <fcntl.h>
 #include <sys/types.h>
