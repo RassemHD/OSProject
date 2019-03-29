@@ -55,10 +55,7 @@ int main(int argc, char ** argv)
 	char arg1[1024];
 	char arg2[1024];
 	int cursor, result, args;
-
-  printf("Commandes :\n dossier => Création d'un dossier\n");
-	printf(" delete=>Supprimme un élément du répertoire\n ls => Affiche contenu répertoire\n");
-
+	
 	while(b>0){
 		pwd(partition,RepertoirCourant);			   
 		fflush(stdout);
@@ -88,7 +85,7 @@ int main(int argc, char ** argv)
 			if(args==2){
 				RepertoirCourant = cd(partition,RepertoirCourant,arg1);
 			}else{
-				printf(RED_BOLD "Commande : delete <nomDossier>" RESET_COLOR);
+				printf(RED_BOLD "Commande : cd <nomDossier>" RESET_COLOR);
 			}
 		}else if(!strcmp(cmd,"copy")) {
      		    Copie = cp(partition, RepertoirCourant);

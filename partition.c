@@ -23,6 +23,7 @@
 // Retourne un bloc initialisé avec les valeurs passées en arguments
 Bloc InitBloc(int fd, int id, int libre, int suiv, char nom[MAXNOMFICHIER], char *donnees, int pere)
 {
+ // for simbolic link, for now, there is no link in the virtual file
  const int tab_init[15] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1 };
  Bloc bloc;
  bloc.FICHIER_DOSSIER =fd ;  bloc.ID_BLOC=id; 
@@ -44,7 +45,9 @@ Bloc creatBloc(int part,int fd, int id, int libre, int suiv, char *nom, char *do
   printf("creat bloc : %d\n",id);
   return bloc;
 }
-
+/*! @brief This function create the base of the virtual file. 
+ * @see creat.c
+ */
 void creatPartition(char*name)
 {
   Bloc bloc;
