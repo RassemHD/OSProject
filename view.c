@@ -107,7 +107,7 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	printf(CYAN "\tDisconnected\n" RESET_COLOR);
+	printf(CYAN " Disconnected\n" RESET_COLOR);
     close(partition);
     return 0;
 }

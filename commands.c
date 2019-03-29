@@ -37,6 +37,7 @@
 #define WHITE "\x1b[37m"
 #define RED "\033[0;31m"
 #define RESET_COLOR "\033[0m"
+
 /*! @brief Affiche le contenu d'un REPERTOIRE passé en argument */
 void ls(int partition, int NumeroBloc)
 {
@@ -57,7 +58,7 @@ void ls(int partition, int NumeroBloc)
 	i++;
 	
 	}
-    if(vide) {printf("Le dossier '%s' est vide !\n",bloc.NOM_BLOC);}
+    if(vide) {printf("Empty folder '%s' !\n",bloc.NOM_BLOC);}
 	else {printf("\n");}
 }
 
@@ -84,10 +85,10 @@ void rm(int partition, int RepertoirParent, char *nom)
 			
 		if(bloc.FICHIER_DOSSIER){  	
 					rmvFile(partition, RepertoirParent, id_bloc); 	
-					printf(GREEN"Fichier supprimé"RESET_COLOR);
+					printf(GREEN"File deleted"RESET_COLOR);
 		}else{ 
 				rmvFolder(partition, RepertoirParent, id_bloc);
-				printf(GREEN"Répertoire supprimé"RESET_COLOR);
+				printf(GREEN"Directory deleted"RESET_COLOR);
 			}
 		}
 	}
@@ -102,10 +103,10 @@ int mkdir(int partition, int RepertoirParent, char *nom)
 		bloc=InitBloc(0,id,0,-1,nom,"",RepertoirParent);       
 		WRITE(partition, id, bloc);
 		addLink(partition, RepertoirParent, id); 
-		printf(GREEN"Répertoire créé"RESET_COLOR);
+		printf(GREEN"Directory created"RESET_COLOR);
 		return 0;
 	}else{
-		printf("Un élément dans le répertoir porte déjà ce nom !\n"); return 0;
+		printf("Directory already exists !\n"); return 0;
 	}
 }
 
@@ -156,7 +157,7 @@ void pwd(int partition, int RepertoirCourant)
 int cp(int partition, int RepertoirParent)
 {
   char nom[MAXNOMFICHIER];
-  printf("Elément à copier :   ");
+  printf("File to copy :   ");
   fgets(nom,sizeof(nom),stdin);     
   strtok(nom, "\n");
   int id= idNameFile(partition, RepertoirParent, nom);
@@ -166,7 +167,7 @@ int cp(int partition, int RepertoirParent)
   }
   else
   { 
-	  printf("Elément copié !\n");
+	  printf("File copied!\n");
 	  return id;
   }
 }
@@ -180,7 +181,7 @@ int past(int partition, int RepertoirPere, int original_ID)
 	
   if(original_ID == -1)
 	{
-	  printf("Aucun fichier copier en attente ! \n"); 
+	  printf("No file to past ! \n"); 
 	  return -1;
     }
   else
@@ -188,19 +189,16 @@ int past(int partition, int RepertoirPere, int original_ID)
 	if(elementExistsInFolder(partition,RepertoirPere, nom) == -1)  
 	{
        Bloc original= READ(partition, original_ID);
-       printf("L'élément collé dans ce répertoir est le %s : %s\n",original.FICHIER_DOSSIER?"Fichier":"Dossier", original.NOM_BLOC);
-        //addLink(partition, RepertoirCourant,  IDCopie);
-      if(original.FICHIER_DOSSIER)
-      {
-	  //CollerFichier();
+       printf("copied %s : %s\n",original.FICHIER_DOSSIER?"file":"Directory", original.NOM_BLOC);
+      if(original.FICHIER_DOSSIER){
+
       }
-      else
-      {
-	  pastFolder(partition, RepertoirPere, original_ID);
+      else{
+	  	pastFolder(partition, RepertoirPere, original_ID);
       }
 	}
 	else 
-	{printf("Un élément dans le répertoir porte déjà ce nom !\n"); return -1;}
+	{printf("File already exists in this directory !\n"); return -1;}
 	
   return 1;
   }
@@ -233,14 +231,16 @@ void man(int argc,char* argv){
     }else if(strcmp(argv,"pwd")==0){
       printf("Commande pwd : affiche le répertoire courant \n aucun argument\n");
     }else if(strcmp(argv,"cp")==0){
-      printf("Commande cp : copie un fichier dans un dossier  \n Arguments : paramètre 1 : fichier source, paramètre 2 : le chemin destination \n Exemple : cp test.c chemin \n ");
+      printf("Commande cp : copier un fichier\n ");
+    }else if(strcmp(argv,"past")==0){
+      printf("Commande past : coller un élément copié par la commande cp \n ");
     }else{
       printf("Cette commande n'existe pas sur notre programme ! \n");
     }
   }else if (argc==1){
     	printf("Veuillez entrer une commande après le man, exemple: man cp\n");
   } else {
-    printf("Veuillez entrer le bon nombre d'argument\n");
+    	printf("Veuillez entrer le bon nombre d'argument\n");
   }
 }
 

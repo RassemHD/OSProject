@@ -45,8 +45,6 @@ int rmvLink(int partition, int RepertoirParent, int lien)
 	
  	if(i<=14)
 	{parent.LIENS[i]=-1; WRITE(partition,RepertoirParent, parent); return 1;}
-	/*else
-	{	exitError("rmvLink : ce lien ne se trouve pas dans le LIENS du Repertoir pere !\n");}*/
 }
 
 
@@ -99,16 +97,6 @@ void rmvFolder(int partition,  int RepertoirParent, int NumeroBloc)
 	}
 
  rmvFile(partition,RepertoirParent,NumeroBloc);
-}
-
-
-void CreationFichier(int partition, int RepertoirParent, char nom[MAXNOMFICHIER], char *donnees)
-{
-  Bloc bloc;
-  int id = firstEmptyBloc(partition);
-  bloc=InitBloc(1,id,0,-1,nom,donnees, RepertoirParent);  
-  WRITE(partition, id, bloc);
-  addLink(partition, RepertoirParent, id); 
 }
 
 // Retourne l'id qui correspond au nom d'un fichier à l'intérieur du répertoir pere
@@ -197,21 +185,11 @@ WRITE(partition, id, copie);
 return id;
 }
 
-void clean_stdin(void) 
-{ 
-    int c; 
-  
-    do { 
-        c = getchar(); 
-    } while (c != '\n' && c != EOF); 
-}
-
 // Imprime le message sur le flux standard stderr
 void exitError(char *message) 
 {
   int errnum;
-  fprintf(stderr,"exitError : %s\n",message);
-  //fprintf(stderr, "%s\n", strerror( errnum ));
+  fprintf(stderr,"error : %s\n",message);
   exit(1);
 }
 
