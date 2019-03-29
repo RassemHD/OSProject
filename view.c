@@ -42,11 +42,11 @@
  */
 int main(int argc, char ** argv) 
 {
-  if (argc != 2) { exitError(RED_BOLD"Utilisation : ./creat <Nom Partition>)"RESET_COLOR); }
+  if (argc != 2) { exitError(RED_BOLD"Utilisation : ./view <Nom Partition>)"RESET_COLOR); }
  
   int partition = open(argv[1], O_RDWR);
   int b=1;
-  int RepertoirCourant =0;
+  int currDir =0;
   int Copie=-1;
 
 	/* for each command and each arguments associated */
@@ -56,8 +56,10 @@ int main(int argc, char ** argv)
 	char arg2[1024];
 	int cursor, result, args;
 	
+	printf(CYAN "\n========== SIMPLE FILE MANAGER ==========\n" RESET_COLOR);
+
 	while(b>0){
-		pwd(partition,RepertoirCourant);			   
+		pwd(partition,currDir);			   
 		fflush(stdout);
 		if(!fgets(line,sizeof(line),stdin)) break;
 
@@ -69,53 +71,43 @@ int main(int argc, char ** argv)
 		args = sscanf(line,"%s %s %s",cmd,arg1,arg2);
 		if(args==0) continue;
 
-		if(!strcmp(cmd,"dossier")) {
+		if(!strcmp(cmd,"mkdir")) {
 			if(args==2){
-				mkdir(partition, RepertoirCourant, arg1);
+				mkdir(partition, currDir, arg1);
 			}else{
-				printf(RED_BOLD "Commande : dossier <nomDossier>" RESET_COLOR);
+				printf(RED_BOLD "Commande : mkdir <directory name>" RESET_COLOR);
 			}
-		}else if(!strcmp(cmd,"delete")) {
+		}else if(!strcmp(cmd,"rm")) {
 			if(args==2){
-				rm(partition, RepertoirCourant,arg1);
+				rm(partition, currDir,arg1);
 			}else{
-				printf(RED_BOLD "Commande : delete <nomDossier>" RESET_COLOR);
+				printf(RED_BOLD "Commande : rm <file name>" RESET_COLOR);
 			}
 		}else if(!strcmp(cmd,"cd")) {
 			if(args==2){
-				RepertoirCourant = cd(partition,RepertoirCourant,arg1);
+				currDir = cd(partition,currDir,arg1);
 			}else{
-				printf(RED_BOLD "Commande : cd <nomDossier>" RESET_COLOR);
+				printf(RED_BOLD "Commande : cd <path>" RESET_COLOR);
 			}
-		}else if(!strcmp(cmd,"copy")) {
-     		    Copie = cp(partition, RepertoirCourant);
-		}else if(!strcmp(cmd,"paste")) {
-     		    past(partition, RepertoirCourant, Copie);
+		}else if(!strcmp(cmd,"cp")) {
+     		    Copie = cp(partition, currDir);
+		}else if(!strcmp(cmd,"past")) {
+     		    past(partition, currDir, Copie);
 		}else if(!strcmp(cmd,"ls")) {
-     		    ls(partition, RepertoirCourant);
-		}else if(!strcmp(cmd,"delete")) {
-
-		}else if(!strcmp(cmd,"help")) {
-			printf("Commands are:\n");
-			printf("    dossier <name_file>\n");
-			printf("    copy : indicate the source file then indicate the target file\n");
-			printf("    delete <name_file>\n");
-			printf("    cd\n");
-			printf("    paste\n");
-			printf("    ls\n");
-			printf("    help\n");
-			printf("    quit\n");
-			printf("    exit\n");
-		} else if(!strcmp(cmd,"quit")) {
+     		    ls(partition, currDir);
+		}else if(!strcmp(cmd,"touch")) {
+				touch(partition,currDir,arg1,"");
+		}else if(!strcmp(cmd,"man")) {
+				man(args,arg1);
+		} else if(!strcmp(cmd,"quit") || !strcmp(cmd,"exit")) {
 			b=0;
-		} else if(!strcmp(cmd,"exit")) {
-			b=0;
-		} else {
+		}else {
 			printf(RED"Unknown command: %s\n"RESET_COLOR,cmd);
 			printf(RED_BOLD"Type 'help' for a list of commands.\n"RESET_COLOR);
 		}
 	}
-	printf(CYAN "Disconnected\n" RESET_COLOR);
-  close(partition);
-  return 0;
+
+	printf(CYAN "\tDisconnected\n" RESET_COLOR);
+    close(partition);
+    return 0;
 }
