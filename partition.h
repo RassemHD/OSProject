@@ -1,7 +1,7 @@
 #ifndef PARTITION_H
 #define PARTITION_H
 
-#define NOMBREBLOCS 100          // Nombre de Blocs qui composent la partition
+#define NOMBREBLOCS 100          // Nombre de Blocs qui composent la partition = si mémoire sup : blocage de l'écriture
 #define TAILLEBLOC 32768		 // Taille de chaque Bloc
 #define MAXNOMFICHIER  20		 // Taille maximale pour le nom d'un Bloc (Fichier ou Dossier)
 #define TAILLEREPERTOIR 15       // Nombre de documents (Fichier ou repertoir) qu'un repertoir peut contenir

@@ -5,12 +5,12 @@
  * @brief This file contains all the file management functions. Each command is then called by view.c which breaks down the string into command + arguments for sending it here. 
  *<ul>
  *<li>void cat(int partition, int NumeroBlock); </li>
- *<li>void ls(int partition, int NumeroBlock);</li>
- *<li>void rm(int partition, int RepertoirParent, char *name);</li>
- *<li>int mkdir(int score, int RepertoirParent, char *name);</li>
- *<li>void pwd(int partition, int RepertoirCourant);</li>
- *<li>int cp(int partition, int RepertoirParent);</li>
- *<li>int past(int partition, int RepertoirPere, int original_ID);</li>
+ *<li>void ls(int partition, int NumeroBlock)=> allow to list repertory and file on the current path.</li>
+ *<li>void rm(int partition, int RepertoirParent, char *name)=> allow to delete a bloc file/repertory with the name send in argument.</li>
+ *<li>int mkdir(int score, int RepertoirParent, char *name)=> allow to build a bloc file/repertory with a name send in parameter.</li>
+ *<li>void pwd(int partition, int RepertoirCourant);=> to know the current path where the user is.</li>
+ *<li>int cp(int partition, int RepertoirParent)=> to copy a file and send it in a variable to allow the command paste type by the user after this one.</li>
+ *<li>int past(int partition, int RepertoirPere, int original_ID)=> retrieve the variable from the copy function</li>
  *<li>int pastFolder(int partition, int RepertoirPere, int original_ID);</li>
  *<li>int cd(int partition, int RepertoirCourant);</li>
  *</ul>
