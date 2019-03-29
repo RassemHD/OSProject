@@ -92,7 +92,7 @@ void rm(int partition, int RepertoirParent, char *nom)
 	}
 
 /*! @brief creation dossier */
-int mkdir(int partition, int RepertoirParent, char *nom)
+int mmkdir(int partition, int RepertoirParent, char *nom)
 { 
   Bloc bloc;
 	if(elementExistsInFolder(partition,RepertoirParent, nom) == -1)
