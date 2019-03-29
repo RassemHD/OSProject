@@ -31,7 +31,6 @@
 #include "utils.h"
 #include "commands.h"
 
-#define DIM 300
 #define CYAN "\033[1;36m" // Bold cyan
 #define RED "\033[0;31m" // simple red
 #define RED_BOLD "\033[1;31m"//bold red
@@ -55,7 +54,7 @@ int main(int argc, char ** argv)
   int partition;
   if(!strcmp(argv[1],"-c")){
 	if (!file_exist(argv[2])){
-    	printf(RED_BOLD"Fichier déjà existant.\n"RESET_COLOR);
+    	printf(RED_BOLD"File already exists.\n"RESET_COLOR);
    	 	return 0;
   	}
 	else{
@@ -132,8 +131,7 @@ int main(int argc, char ** argv)
 			printf(RED_BOLD"Type 'help' for a list of commands.\n"RESET_COLOR);
 		}
 	}
-
 	printf(CYAN "\tDisconnected\n" RESET_COLOR);
-    close(partition);
-    return 0;
+  close(partition);
+  return 0;
 }

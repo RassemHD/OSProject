@@ -14,6 +14,7 @@
  *<li>int pastFolder(int partition, int RepertoirPere, int original_ID);</li>
  *<li>int cd(int partition, int RepertoirCourant);</li>
  *</ul>
+ *
  * @see partition.h
  * @see partition.h
  * @see command.h
@@ -209,10 +210,8 @@ int past(int partition, int RepertoirPere, int original_ID)
 	}
 	else 
 	{printf("Un élément dans le répertoir porte déjà ce nom !\n"); return -1;}
-	
   return 1;
   }
-
 }
 /*! @brief Allow to display the help text for a specific command */
 void man(int argc,char* argv){
