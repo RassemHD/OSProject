@@ -31,6 +31,7 @@
 #include "utils.h"
 #include "commands.h"
 
+#define CYAN "\033[1;36m" // Bold cyan
 #define GREEN "\033[1;32m" // Bold green == ANSI color
 #define BLUE "\x1b[34m"
 #define WHITE "\x1b[37m"
@@ -50,7 +51,7 @@ void ls(int partition, int NumeroBloc)
 			if(b.FICHIER_DOSSIER)
 			{ printf(GREEN "'%s'\t" RESET_COLOR,b.NOM_BLOC);} //Fichier
 			else
-			{ printf(GREEN"\"%s\":%d:\t"RESET_COLOR,b.NOM_BLOC,b.ID_BLOC);}	//Dossier			
+			{ printf(CYAN"\"%s\":%d:\t"RESET_COLOR,b.NOM_BLOC,b.ID_BLOC);}	//Dossier			
 		 vide=0;
 		}
 	i++;
@@ -204,5 +205,42 @@ int past(int partition, int RepertoirPere, int original_ID)
   return 1;
   }
 
+}
+
+void touch(int partition, int RepertoirParent, char nom[MAXNOMFICHIER], char *donnees)
+{
+  Bloc bloc;
+  int id = firstEmptyBloc(partition);
+  bloc=InitBloc(1,id,0,-1,nom,donnees, RepertoirParent);  
+  WRITE(partition, id, bloc);
+  addLink(partition, RepertoirParent, id); 
+}
+
+void man(int argc,char* argv){
+  if(argc==2){
+    if(strcmp(argv,"cd")==0){
+      printf("Commande cd : permet de changer de répertoire courant -\n argument : le chemin du répertoire \n Exemple : cd chemin ou ./cd chemin \n");
+    }else if(strcmp(argv,"ls")==0){
+      printf("Commande ls : liste le contenu d'un répertoire\n");
+    }else if(strcmp(argv,"cat")==0){
+      printf("Commande cat : afficher le contenu du fichier passé en parametre\n Exemple : cat nom_fichier\n");
+    }else if(strcmp(argv,"rm")==0){
+      printf("Commande rm : supprime le fichier entré en paramètre \n Exemple : rm nom_fichier \n");
+    }else if(strcmp(argv,"mv")==0){
+      printf("Commande mv : déplace un fichier vers un répertoire\nExemple : mv nom_fichier nom_repertoir");
+    }else if(strcmp(argv,"mkdir")==0){
+      printf("Commande mkdir: crée un dossier\n Exemple : mkdir nom_dossier \n");
+    }else if(strcmp(argv,"pwd")==0){
+      printf("Commande pwd : affiche le répertoire courant \n aucun argument\n");
+    }else if(strcmp(argv,"cp")==0){
+      printf("Commande cp : copie un fichier dans un dossier  \n Arguments : paramètre 1 : fichier source, paramètre 2 : le chemin destination \n Exemple : cp test.c chemin \n ");
+    }else{
+      printf("Cette commande n'existe pas sur notre programme ! \n");
+    }
+  }else if (argc==1){
+    	printf("Veuillez entrer une commande après le man, exemple: man cp\n");
+  } else {
+    printf("Veuillez entrer le bon nombre d'argument\n");
+  }
 }
 
