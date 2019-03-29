@@ -20,10 +20,8 @@
 #include "utils.h"
 
 
-// Retourne un bloc initialisé avec les valeurs passées en arguments
 Bloc InitBloc(int fd, int id, int libre, int suiv, char nom[MAXNOMFICHIER], char *donnees, int pere)
 {
- // for simbolic link, for now, there is no link in the virtual file
  const int tab_init[15] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1 };
  Bloc bloc;
  bloc.FICHIER_DOSSIER =fd ;  bloc.ID_BLOC=id; 
@@ -68,7 +66,6 @@ void creatPartition(char*name)
   close(partition);
 }
 
-// Retourne l'id du premier bloc libre dans la partition (Ordre descendant), si tout les blocs occupé, retourne -1
 int firstEmptyBloc(int partition)
 {
   Bloc bloc; int i=0; 
@@ -84,14 +81,12 @@ int firstEmptyBloc(int partition)
 	exitError("firstEmptyBloc : Mémoire pleine !\n"); 
 }
 
-// "Redéfintion" de la fonction lseek, syntaxe plus légere et prise en compte des exitErrors
 void LSEEK(int partition, int NumeroBloc)
 {	long OFF_SET = NumeroBloc*sizeof(Bloc);
 	if ( OFF_SET != lseek(partition, NumeroBloc*sizeof(Bloc), SEEK_SET) )  
 		{ exitError("lseek error"); }
 }
 
-// "Redéfintion" de la fonction write, syntaxe plus légere et prise en compte des exitErrors
 void WRITE(int partition, int NumeroBloc, Bloc bloc)
 {
 	LSEEK(partition, NumeroBloc);
@@ -100,7 +95,6 @@ void WRITE(int partition, int NumeroBloc, Bloc bloc)
 }
 
 
-// "Redéfintion" de la fonction read, syntaxe plus légere et prise en compte des exitErrors
 Bloc READ (int partition, int NumeroBloc)
 {
 	if (NumeroBloc > NOMBREBLOCS) {exitError("Bloc out of partition"); }

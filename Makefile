@@ -1,7 +1,7 @@
-all: view doc
+all: fmanager doc
 
-doc : view.c partition.c utils.c commands.c
-	doxygen view.c partition.c utils.c commands.c
+doc : fmanager.c partition.c utils.c commands.c
+	doxygen fmanager.c partition.c utils.c commands.c
 
 partition.o: partition.c utils.c partition.h utils.h
 	gcc -c partition.c
@@ -12,11 +12,11 @@ utils.o:  partition.c utils.c partition.h utils.h
 commands.o:  commands.c partition.c utils.c partition.h utils.h commands.h
 	gcc -c commands.c
 
-view.o: view.c commands.c partition.c utils.c partition.h utils.h commands.h
-	gcc -c view.c
+fmanager.o: fmanager.c commands.c partition.c utils.c partition.h utils.h commands.h
+	gcc -c fmanager.c
 
-view: view.o utils.o commands.o
-	gcc partition.o utils.o commands.o view.o -o view
+fmanager: fmanager.o utils.o commands.o
+	gcc partition.o utils.o commands.o fmanager.o -o fmanager
 
 clean:
-	rm *.o view test
+	rm *.o fmanager test
