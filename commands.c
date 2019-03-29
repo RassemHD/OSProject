@@ -109,12 +109,8 @@ int mkdir(int partition, int RepertoirParent, char *nom)
 }
 
 /*! @brief changer repertoire */
-int cd(int partition, int RepertoirCourant)
+int cd(int partition, int RepertoirCourant, char *nom)
 {
-  char nom[MAXNOMFICHIER];
-  printf("Se déplacer dans le dossier :   ");
-  fgets(nom,sizeof(nom),stdin);     
-  strtok(nom, "\n");
    if (strcmp(nom, "..") == 0) 
    {
 	  Bloc parent = READ(partition, RepertoirCourant);

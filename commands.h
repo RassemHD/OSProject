@@ -9,6 +9,6 @@ void pwd(int partition, int RepertoirCourant);
 int cp(int partition, int RepertoirParent);
 int past(int partition, int RepertoirPere, int original_ID);
 int pastFolder(int partition, int RepertoirPere, int original_ID);
-int cd(int partition, int RepertoirCourant);
+int cd(int partition, int RepertoirCourant, char *nom);
 
 #endif

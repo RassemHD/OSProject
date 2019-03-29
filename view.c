@@ -85,7 +85,11 @@ int main(int argc, char ** argv)
 				printf(RED_BOLD "Commande : delete <nomDossier>" RESET_COLOR);
 			}
 		}else if(!strcmp(cmd,"cd")) {
-  		    RepertoirCourant = cd(partition, RepertoirCourant);
+			if(args==2){
+				RepertoirCourant = cd(partition,RepertoirCourant,arg1);
+			}else{
+				printf(RED_BOLD "Commande : delete <nomDossier>" RESET_COLOR);
+			}
 		}else if(!strcmp(cmd,"copy")) {
      		    Copie = cp(partition, RepertoirCourant);
 		}else if(!strcmp(cmd,"paste")) {
