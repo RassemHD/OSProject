@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include <linux/types.h>
 #include <stdio.h>
+#include <sys/stat.h>
 #include <errno.h>
 #include <string.h>
 
@@ -30,11 +31,18 @@
 #include "utils.h"
 #include "commands.h"
 
-#define DIM 300
 #define CYAN "\033[1;36m" // Bold cyan
 #define RED "\033[0;31m" // simple red
 #define RED_BOLD "\033[1;31m"//bold red
 #define RESET_COLOR "\033[0m"
+/*! 
+ *@brief allow to know if a file exists in the user's system 
+ */
+int file_exist(char* nom_fichier)
+{
+  struct stat fstat;                 
+  return lstat(nom_fichier, &fstat);
+}
 /*!
  * @brief Here, the program starts an infinite loop that simulates the control interface and waits 
  * for the user to enter his order. This is then separated into arg1 arg2 command to easily 
@@ -42,9 +50,21 @@
  */
 int main(int argc, char ** argv) 
 {
-  if (argc != 2) { exitError(RED_BOLD"Utilisation : ./view <Nom Partition>)"RESET_COLOR); }
- 
-  int partition = open(argv[1], O_RDWR);
+  if (argc != 3) { exitError(RED_BOLD"Utilisation : ./creat [-c|-v] <Nom Partition>)"RESET_COLOR); }
+  int partition;
+  if(!strcmp(argv[1],"-c")){
+	if (!file_exist(argv[2])){
+    	printf(RED_BOLD"File already exists.\n"RESET_COLOR);
+   	 	return 0;
+  	}
+	else{
+		creatPartition(argv[2]);
+		partition = open(argv[2], O_RDWR);
+	}
+  }else if(!strcmp(argv[1],"-v")){
+	partition = open(argv[2], O_RDWR);
+  }
+
   int b=1;
   int currDir =0;
   int Copie=-1;
@@ -65,7 +85,7 @@ int main(int argc, char ** argv)
 
 		if(line[0]=='\n') continue;
 		line[strlen(line)-1] = 0;
-		/* 
+		/*
 		* In this case, we separate the command with 3 strings of character to use it easily		
 		*/
 		args = sscanf(line,"%s %s %s",cmd,arg1,arg2);
@@ -73,7 +93,7 @@ int main(int argc, char ** argv)
 
 		if(!strcmp(cmd,"mkdir")) {
 			if(args==2){
-				mkdir(partition, currDir, arg1);
+				mmkdir(partition, currDir, arg1);
 			}else{
 				printf(RED_BOLD "Commande : mkdir <directory name>" RESET_COLOR);
 			}
@@ -96,6 +116,11 @@ int main(int argc, char ** argv)
 		}else if(!strcmp(cmd,"ls")) {
      		    ls(partition, currDir);
 		}else if(!strcmp(cmd,"touch")) {
+			if(args==2){
+				touch(partition,currDir,arg1,"");
+			}else{
+				printf(RED_BOLD "Commande : touch <file name>" RESET_COLOR);
+			}
 				touch(partition,currDir,arg1,"");
 		}else if(!strcmp(cmd,"man")) {
 				man(args,arg1);
@@ -106,7 +131,7 @@ int main(int argc, char ** argv)
 			printf(RED_BOLD"Type 'help' for a list of commands.\n"RESET_COLOR);
 		}
 	}
-
+	
 	printf(CYAN " Disconnected\n" RESET_COLOR);
     close(partition);
     return 0;

@@ -52,7 +52,7 @@ void creatPartition(char*name)
 {
   Bloc bloc;
   int partition;
-
+  
   partition = open(name, O_RDWR | O_CREAT,0777);
 
   bloc=creatBloc(partition,0,0,0,-1,"Home","",-1);    
