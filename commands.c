@@ -125,26 +125,22 @@ int cd(int partition, int RepertoirCourant, char *nom)
    {
 	  Bloc parent = READ(partition, RepertoirCourant);
 	  if(parent.PERE == -1)
-	  {printf("Nous somme à la racine de cette partition !\n"); return RepertoirCourant;}
-	   else
-	  {return parent.PERE;}
+	 		return RepertoirCourant;
+	  else
+	  	return parent.PERE;
    }
    else
    {
 	int id_bloc= idNameFile(partition, RepertoirCourant, nom);
 	   if(id_bloc!=-1)
 	   {
-         Bloc bloc = READ(partition, id_bloc);
-	     if(bloc.FICHIER_DOSSIER)
-		 {printf(" '%s' est un fichier pas un dossier !\n",nom); return RepertoirCourant;}
-		 else
-		 {return bloc.ID_BLOC;}
-	   }
+        Bloc bloc = READ(partition, id_bloc);
+	    	if(bloc.FICHIER_DOSSIER)
+		  		return RepertoirCourant;
+		 		else
+		 			return bloc.ID_BLOC;}
 	   else
-	   {
-	     return RepertoirCourant;
-	   
-	   }
+	    return RepertoirCourant;
 	}
   
   
@@ -201,7 +197,6 @@ int past(int partition, int RepertoirPere, int original_ID)
         //addLink(partition, RepertoirCourant,  IDCopie);
       if(original.FICHIER_DOSSIER)
       {
-	  //CollerFichier();
       }
       else
       {
