@@ -37,7 +37,7 @@
 #define WHITE "\x1b[37m"
 #define RED "\033[0;31m"
 #define RESET_COLOR "\033[0m"
-/*! @brief Affiche le contenu d'un REPERTOIRE passé en argument */
+/*! @brief Displays the content of a directory */
 void ls(int partition, int NumeroBloc)
 {
     Bloc bloc=READ(partition, NumeroBloc);
@@ -61,7 +61,7 @@ void ls(int partition, int NumeroBloc)
 	else {printf("\n");}
 }
 
-/*! @brief Affiche le contenu d'un FICHIER passé en argument */
+/*! @brief Display the content of a file */
 void cat(int partition, int NumeroBloc)
 {
     Bloc bloc;
@@ -73,7 +73,7 @@ void cat(int partition, int NumeroBloc)
 
 }
 
-/*! @brief Supprimme un élémet (dossier ou fichier) d'un Répertoire */
+/*! @brief Delete a bloc element, file or repertory */
 void rm(int partition, int RepertoirParent, char *nom)
 {
   Bloc bloc;
@@ -91,8 +91,16 @@ void rm(int partition, int RepertoirParent, char *nom)
 			}
 		}
 	}
-
-/*! @brief creation dossier */
+/*! @brief Create a file bloc */
+void touch(int partition, int RepertoirParent, char nom[MAXNOMFICHIER], char *donnees)
+{
+  Bloc bloc;
+  int id = firstEmptyBloc(partition);
+  bloc=InitBloc(1,id,0,-1,nom,donnees, RepertoirParent);  
+  WRITE(partition, id, bloc);
+  addLink(partition, RepertoirParent, id); 
+}
+/*! @brief create a repertory */
 int mmkdir(int partition, int RepertoirParent, char *nom)
 { 
   Bloc bloc;
@@ -109,7 +117,7 @@ int mmkdir(int partition, int RepertoirParent, char *nom)
 	}
 }
 
-/*! @brief changer repertoire */
+/*! @brief changes the current path */
 int cd(int partition, int RepertoirCourant, char *nom)
 {
    if (strcmp(nom, "..") == 0) 
@@ -140,7 +148,7 @@ int cd(int partition, int RepertoirCourant, char *nom)
   
   
 }
-/*! @brief Affichage du répertoire courant actuelle */
+/*! @brief Display the path of the current repertory */
 void pwd(int partition, int RepertoirCourant)
 {
 	printf("\nuser:/Home");
@@ -152,7 +160,7 @@ void pwd(int partition, int RepertoirCourant)
 	printf("$>");
 }
 
-/*! @brief copier fichier */
+/*! @brief Copy a file */
 int cp(int partition, int RepertoirParent)
 {
   char nom[MAXNOMFICHIER];
@@ -171,7 +179,7 @@ int cp(int partition, int RepertoirParent)
   }
 }
 
-// coller
+/*! @brief Past a file previously copied */
 int past(int partition, int RepertoirPere, int original_ID)
 {
 	char nom[MAXNOMFICHIER];
@@ -206,16 +214,7 @@ int past(int partition, int RepertoirPere, int original_ID)
   }
 
 }
-
-void touch(int partition, int RepertoirParent, char nom[MAXNOMFICHIER], char *donnees)
-{
-  Bloc bloc;
-  int id = firstEmptyBloc(partition);
-  bloc=InitBloc(1,id,0,-1,nom,donnees, RepertoirParent);  
-  WRITE(partition, id, bloc);
-  addLink(partition, RepertoirParent, id); 
-}
-
+/*! @brief Allow to display the help text for a specific command */
 void man(int argc,char* argv){
   if(argc==2){
     if(strcmp(argv,"cd")==0){

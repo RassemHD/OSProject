@@ -36,16 +36,19 @@
 #define RED "\033[0;31m" // simple red
 #define RED_BOLD "\033[1;31m"//bold red
 #define RESET_COLOR "\033[0m"
-/*!
- * @brief Here, the program starts an infinite loop that simulates the control interface and waits 
- * for the user to enter his order. This is then separated into arg1 arg2 command to easily 
- * launch the associated function.
+/*! 
+ *@brief allow to know if a file exists in the user's system 
  */
 int file_exist(char* nom_fichier)
 {
   struct stat fstat;                 
   return lstat(nom_fichier, &fstat);
 }
+/*!
+ * @brief Here, the program starts an infinite loop that simulates the control interface and waits 
+ * for the user to enter his order. This is then separated into arg1 arg2 command to easily 
+ * launch the associated function.
+ */
 int main(int argc, char ** argv) 
 {
   if (argc != 3) { exitError(RED_BOLD"Utilisation : ./creat [-c|-v] <Nom Partition>)"RESET_COLOR); }
@@ -114,6 +117,11 @@ int main(int argc, char ** argv)
 		}else if(!strcmp(cmd,"ls")) {
      		    ls(partition, currDir);
 		}else if(!strcmp(cmd,"touch")) {
+			if(args==2){
+				touch(partition,currDir,arg1,"");
+			}else{
+				printf(RED_BOLD "Commande : touch <file name>" RESET_COLOR);
+			}
 				touch(partition,currDir,arg1,"");
 		}else if(!strcmp(cmd,"man")) {
 				man(args,arg1);
