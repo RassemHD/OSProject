@@ -91,11 +91,7 @@ int main(int argc, char ** argv)
 
 		if(!strcmp(cmd,"mkdir")) {
 			if(args==2){
-<<<<<<< HEAD
-				mmkdir(partition, RepertoirCourant, arg1);
-=======
-				mkdir(partition, currDir, arg1);
->>>>>>> 8ffce21add814e3338f5a16f1bfcce0981d75d1b
+				mmkdir(partition, currDir, arg1);
 			}else{
 				printf(RED_BOLD "Commande : mkdir <directory name>" RESET_COLOR);
 			}
