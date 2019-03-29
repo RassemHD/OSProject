@@ -131,7 +131,8 @@ int main(int argc, char ** argv)
 			printf(RED_BOLD"Type 'man <command>' for a list of commands.\n"RESET_COLOR);
 		}
 	}
-	printf(CYAN "\tDisconnected\n" RESET_COLOR);
-  close(partition);
-  return 0;
+	
+	printf(CYAN " Disconnected\n" RESET_COLOR);
+    close(partition);
+    return 0;
 }
