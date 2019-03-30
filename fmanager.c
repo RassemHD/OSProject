@@ -74,7 +74,7 @@ int main(int argc, char ** argv)
 	char cmd[1024];
 	char arg1[1024];
 	char arg2[1024];
-	int cursor, result, args;
+	int args;
 	
 	printf(CYAN "\n========== SIMPLE FILE MANAGER ==========\n" RESET_COLOR);
 
@@ -131,8 +131,7 @@ int main(int argc, char ** argv)
 			printf(RED_BOLD"Type 'man <command>' for a list of commands.\n"RESET_COLOR);
 		}
 	}
-	
-	printf(CYAN " Disconnected\n" RESET_COLOR);
-    close(partition);
-    return 0;
+	printf(CYAN "\tDisconnected\n" RESET_COLOR);
+  close(partition);
+  return 0;
 }

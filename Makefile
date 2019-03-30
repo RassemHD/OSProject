@@ -15,8 +15,8 @@ commands.o:  commands.c partition.c utils.c partition.h utils.h commands.h
 fmanager.o: fmanager.c commands.c partition.c utils.c partition.h utils.h commands.h
 	gcc -c fmanager.c
 
-fmanager: fmanager.o utils.o commands.o
-	gcc partition.o utils.o commands.o view.o -o fmanager
+fmanager: fmanager.o utils.o commands.o partition.o
+	gcc fmanager.o partition.o utils.o commands.o -o fmanager
 
 clean:
-	rm *.o fmanager test
+	rm *.o fmanager

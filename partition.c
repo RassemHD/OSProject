@@ -20,14 +20,15 @@
 #include "utils.h"
 
 
-Bloc InitBloc(int fd, int id, int libre, int suiv, char nom[MAXNOMFICHIER], char *donnees, int pere)
+// Retourne un bloc initialisé avec les valeurs passées en arguments
+Bloc InitBloc(int fd, int id, int libre, int suiv, char nom[DIM_NAME_FILE], char *donnees, int pere)
 {
+ // for simbolic link, for now, there is no link in the virtual file
  const int tab_init[15] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1 };
  Bloc bloc;
  bloc.FICHIER_DOSSIER =fd ;  bloc.ID_BLOC=id; 
  bloc.LIBRE=libre; bloc.BLOC_SUIVANT=suiv; 
  strcpy(bloc.NOM_BLOC, nom);
- strcpy(bloc.DONNEES, donnees); 
  memcpy(bloc.LIENS, tab_init, sizeof(tab_init));
  bloc.PERE = pere;
  return bloc;
@@ -66,6 +67,23 @@ void creatPartition(char*name)
   close(partition);
 }
 
+// Parcours la partition et l'affiche
+void printPartition(int partition)
+{
+	Bloc bloc;
+  for (int i = 0; i < NOMBREBLOCS; i++) 
+  {  
+    bloc=READ(partition,i);
+
+    // blocName(partition, i, blocName); printf("Nom deu bloc %d : %s\n",i,blocName);
+  }
+}
+
+
+
+
+
+// Retourne l'id du premier bloc libre dans la partition (Ordre descendant), si tout les blocs occupé, retourne -1
 int firstEmptyBloc(int partition)
 {
   Bloc bloc; int i=0; 
@@ -81,25 +99,28 @@ int firstEmptyBloc(int partition)
 	exitError("firstEmptyBloc : Mémoire pleine !\n"); 
 }
 
+// "Redéfintion" de la fonction lseek, syntaxe plus légere et prise en compte des exitErrors
 void LSEEK(int partition, int NumeroBloc)
 {	long OFF_SET = NumeroBloc*sizeof(Bloc);
 	if ( OFF_SET != lseek(partition, NumeroBloc*sizeof(Bloc), SEEK_SET) )  
-		{ exitError("lseek error"); }
+		{ exitError("lseek exitError"); }
 }
 
+// "Redéfintion" de la fonction write, syntaxe plus légere et prise en compte des exitErrors
 void WRITE(int partition, int NumeroBloc, Bloc bloc)
 {
 	LSEEK(partition, NumeroBloc);
 	if (write(partition, &bloc,sizeof(Bloc)) != sizeof(Bloc))
-		{ exitError("Write : error"); }
+		{ exitError("Write : exitError"); }
 }
 
 
+// "Redéfintion" de la fonction read, syntaxe plus légere et prise en compte des exitErrors
 Bloc READ (int partition, int NumeroBloc)
 {
-	if (NumeroBloc > NOMBREBLOCS) {exitError("Bloc out of partition"); }
+	if (NumeroBloc > NOMBREBLOCS) {exitError("Bloc hors de la partition"); }
 	LSEEK(partition, NumeroBloc);
     Bloc bloc;
-    if (sizeof(Bloc) != read(partition,&bloc,sizeof(Bloc))) { exitError("Read : error"); }
+    if (sizeof(Bloc) != read(partition,&bloc,sizeof(Bloc))) { exitError("Read : exitError"); }
 	return bloc;
 }
