@@ -110,7 +110,11 @@ int main(int argc, char ** argv)
 				printf(RED_BOLD "Commande : cd <path>" RESET_COLOR);
 			}
 		}else if(!strcmp(cmd,"cp")) {
-     		    Copie = cp(partition, currDir);
+			if(args==2){
+				Copie = cp(partition, currDir,arg1);
+			}else{
+				printf(RED_BOLD "Commande : cp <name_file>" RESET_COLOR);
+			}
 		}else if(!strcmp(cmd,"past")) {
      		    past(partition, currDir, Copie);
 		}else if(!strcmp(cmd,"ls")) {
@@ -121,7 +125,6 @@ int main(int argc, char ** argv)
 			}else{
 				printf(RED_BOLD "Commande : touch <file name>" RESET_COLOR);
 			}
-				touch(partition,currDir,arg1,"");
 		}else if(!strcmp(cmd,"man")) {
 				man(args,arg1);
 		} else if(!strcmp(cmd,"quit") || !strcmp(cmd,"exit")) {

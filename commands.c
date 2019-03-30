@@ -4,14 +4,13 @@
  * @author Saint-Amand Matthieu, Castelain Julien, Hachoud Rassem
  * @brief This file contains all the file management functions. Each command is then called by view.c which breaks down the string into command + arguments for sending it here. 
  *<ul>
- *<li>void cat(int partition, int nBk); </li>
  *<li>void ls(int partition, int nBk)=> allow to list repertory and file on the current path.</li>
  *<li>void rm(int partition, int dirPar, char *name)=> allow to delete a bloc file/repertory with the name send in argument.</li>
  *<li>int mkdir(int score, int dirPar, char *name)=> allow to build a bloc file/repertory with a name send in parameter.</li>
  *<li>void pwd(int partition, int currDir);=> to know the current path where the user is.</li>
  *<li>int cp(int partition, int dirPar)=> to copy a file and send it in a variable to allow the command paste type by the user after this one.</li>
- *<li>int past(int partition, int RepertoirPere, int original_ID)=> retrieve the variable from the copy function</li>
- *<li>int pastFolder(int partition, int RepertoirPere, int original_ID);</li>
+ *<li>int past(int partition, int F_directory, int original_ID)=> retrieve the variable from the copy function</li>
+ *<li>int pastFolder(int partition, int F_directory, int original_ID);</li>
  *<li>int cd(int partition, int currDir);</li>
  *</ul>
  *
@@ -41,15 +40,15 @@
 /*! @brief Displays the content of a directory */
 void ls(int partition, int nB)
 {
-    Bloc bloc=READ(partition, nB);
+  Bloc bloc=READ(partition, nB);
 	Bloc b;
 	int i=0, vide=1;
 	while(i < 15)
 	{ 
-		if(bloc.LIENS[i] != -1)
+		if(bloc.LINK_TO_BLOC[i] != -1)
 		{
-		 b=READ(partition, bloc.LIENS[i]);
-			if(b.FICHIER_DOSSIER)
+		 b=READ(partition, bloc.LINK_TO_BLOC[i]);
+			if(b.F_D)
 			{ printf(GREEN "'%s'\t" RESET_COLOR,b.BNAME);} //Fichier
 			else
 			{ printf(CYAN"\"%s\":%d:\t"RESET_COLOR,b.BNAME,b.ID_BLOC);}	//Dossier			
@@ -71,7 +70,7 @@ void rm(int partition, int dirPar, char *nom)
 	if(id_bloc!=-1){
 		bloc = READ(partition,id_bloc);
 			
-		if(bloc.FICHIER_DOSSIER){  	
+		if(bloc.F_D){  	
 					rmvFile(partition, dirPar, id_bloc); 	
 					printf(GREEN"Fichier supprimé"RESET_COLOR);
 		}else{ 
@@ -88,11 +87,12 @@ void touch(int partition, int dirPar, char nom[DIM_NAME_FILE], char *donnees)
   bloc=InitBloc(1,id,0,-1,nom,donnees, dirPar);  
   WRITE(partition, id, bloc);
   addLink(partition, dirPar, id); 
+	printf(GREEN"File created."RESET_COLOR);
 }
 /*! @brief Display the path of the current repertory */
 void pwd(int partition, int currDir)
 {
-	printf("\nuser:/Home");
+	printf("\n@ser/Home");
 	Bloc bloc=READ(partition, currDir);
 	if(bloc.PERE !=-1)
 	{   recNamePath(partition, bloc.PERE);
@@ -133,7 +133,7 @@ int cd(int partition, int currDir, char *nom)
 	   if(id_bloc!=-1)
 	   {
         Bloc bloc = READ(partition, id_bloc);
-	    	if(bloc.FICHIER_DOSSIER)
+	    	if(bloc.F_D)
 		  		return currDir;
 		 		else
 		 			return bloc.ID_BLOC;}
@@ -145,12 +145,8 @@ int cd(int partition, int currDir, char *nom)
 }
 
 /*! @brief Copy a file */
-int cp(int partition, int dirPar)
+int cp(int partition, int dirPar, char *nom)
 {
-  char nom[DIM_NAME_FILE];
-  printf("Elément à copier :   ");
-  fgets(nom,sizeof(nom),stdin);     
-  strtok(nom, "\n");
   int id= idNameFile(partition, dirPar, nom);
   if(id==-1)
   {
@@ -158,13 +154,13 @@ int cp(int partition, int dirPar)
   }
   else
   { 
-	  printf("Elément copié !\n");
+	  printf(GREEN"Copy done !\n"RESET_COLOR);
 	  return id;
   }
 }
 
 /*! @brief Past a file previously copied */
-int past(int partition, int RepertoirPere, int original_ID)
+int past(int partition, int F_directory, int original_ID)
 {
 	char nom[DIM_NAME_FILE];
 	blocName(partition, original_ID, nom);
@@ -177,17 +173,15 @@ int past(int partition, int RepertoirPere, int original_ID)
     }
   else
   {
-	if(elementExistsInFolder(partition,RepertoirPere, nom) == -1)  
+	if(elementExistsInFolder(partition,F_directory, nom) == -1)  
 	{
        Bloc original= READ(partition, original_ID);
-       printf("L'élément collé dans ce répertoir est le %s : %s\n",original.FICHIER_DOSSIER?"Fichier":"Dossier", original.BNAME);
-        //addLink(partition, currDir,  IDCopie);
-      if(original.FICHIER_DOSSIER)
+      if(original.F_D)
       {
       }
       else
       {
-	  pastFolder(partition, RepertoirPere, original_ID);
+	  pastFolder(partition, F_directory, original_ID);
       }
 	}
 	else 
@@ -199,28 +193,28 @@ int past(int partition, int RepertoirPere, int original_ID)
 void man(int argc,char* argv){
   if(argc==2){
     if(strcmp(argv,"cd")==0){
-      printf("Commande cd : permet de changer de répertoire courant -\n argument : le chemin du répertoire \n Exemple : cd chemin ou ./cd chemin \n");
+      printf("Command cd : Allow to change current directory -\n argument : the path \n Example : cd path or ./cd path \n");
     }else if(strcmp(argv,"ls")==0){
-      printf("Commande ls : liste le contenu d'un répertoire\n");
+      printf("Command ls : List the content of a repertory\n");
     }else if(strcmp(argv,"cat")==0){
-      printf("Commande cat : afficher le contenu du fichier passé en parametre\n Exemple : cat nom_fichier\n");
+      printf("Command cat : Display the content of a file passed in argument\n Example : cat name_file\n");
     }else if(strcmp(argv,"rm")==0){
-      printf("Commande rm : supprime le fichier entré en paramètre \n Exemple : rm nom_fichier \n");
+      printf("Command rm : Delete a file retrieved in argument \n Example : rm name_file \n");
     }else if(strcmp(argv,"mv")==0){
-      printf("Commande mv : déplace un fichier vers un répertoire\nExemple : mv nom_fichier nom_repertoir");
+      printf("Command mv : move a file into a directory\nExample : mv name_file name_directory");
     }else if(strcmp(argv,"mkdir")==0){
-      printf("Commande mkdir: crée un dossier\n Exemple : mkdir nom_dossier \n");
+      printf("Command mkdir: create a directory\n Example : mkdir name_directory \n");
     }else if(strcmp(argv,"pwd")==0){
-      printf("Commande pwd : affiche le répertoire courant \n aucun argument\n");
+      printf("Command pwd :display the current path \n aucun argument\n");
     }else if(strcmp(argv,"cp")==0){
-      printf("Commande cp : copie un fichier dans un dossier  \n Arguments : paramètre 1 : fichier source, paramètre 2 : le chemin destination \n Exemple : cp test.c chemin \n ");
+      printf("Command cp : copy a file into a directory \n Arguments : paramètre 1 : fichier source, paramètre 2 : le chemin destination \n Example : cp test.c chemin \n ");
     }else{
-      printf("Cette commande n'existe pas sur notre programme ! \n");
+      printf("This command doesn't exists \n");
     }
   }else if (argc==1){
-    	printf("Veuillez entrer une commande après le man, exemple: man cp\n");
+    	printf("Please, enter a command after man : man <command> !\n");
   } else {
-    printf("Veuillez entrer le bon nombre d'argument\n");
+    printf("Please, enter argument\n");
   }
 }
 

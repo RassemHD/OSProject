@@ -7,15 +7,13 @@
 #define DIM_NAME_FILE  30		 
 #define TAILLEREPERTOIR 15      
 #define MAXDONNEEBLOC (TAILLEBLOC - 5*sizeof(int) - sizeof(int[15])  - sizeof(char[DIM_NAME_FILE])) 
-
-// Structure d'un Bloc
 typedef struct Bloc
 {
   char BNAME[DIM_NAME_FILE];         // The bloc can be a file or a directory, so this array retrieve the bloc name
-  int LIENS[TAILLEREPERTOIR];	      //this array contains a set of link where each link is a path towards another bloc
+  int LINK_TO_BLOC[TAILLEREPERTOIR];	      //this array contains a set of link where each link is a path towards another bloc
   int PERE;						             // the id of the parent directory
-  int BLOC_SUIVANT;				        // contains the bloc id which contains the rest of the file
-  int FICHIER_DOSSIER;			     // allow to know if the bloc is a file or a directory
+  int NEXT;				        // contains the bloc id which contains the rest of the file
+  int F_D;			     // allow to know if the bloc is a file or a directory
   int ID_BLOC;                  // identity of the bloc
   int LIBRE;				           // to know if the bloc is free or not
 }Bloc;
