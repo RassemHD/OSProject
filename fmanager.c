@@ -23,7 +23,6 @@
 #include <unistd.h>
 #include <linux/types.h>
 #include <stdio.h>
-#include <sys/stat.h>
 #include <errno.h>
 #include <string.h>
 
@@ -35,14 +34,7 @@
 #define RED "\033[0;31m" // simple red
 #define RED_BOLD "\033[1;31m"//bold red
 #define RESET_COLOR "\033[0m"
-/*! 
- *@brief allow to know if a file exists in the user's system 
- */
-int file_exist(char* nom_fichier)
-{
-  struct stat fstat;                 
-  return lstat(nom_fichier, &fstat);
-}
+
 /*!
  * @brief Here, the program starts an infinite loop that simulates the control interface and waits 
  * for the user to enter his order. This is then separated into arg1 arg2 command to easily 
