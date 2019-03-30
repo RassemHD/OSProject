@@ -50,15 +50,15 @@ void ls(int partition, int nB)
 		{
 		 b=READ(partition, bloc.LIENS[i]);
 			if(b.FICHIER_DOSSIER)
-			{ printf(GREEN "'%s'\t" RESET_COLOR,b.NOM_BLOC);} //Fichier
+			{ printf(GREEN "'%s'\t" RESET_COLOR,b.BNAME);} //Fichier
 			else
-			{ printf(CYAN"\"%s\":%d:\t"RESET_COLOR,b.NOM_BLOC,b.ID_BLOC);}	//Dossier			
+			{ printf(CYAN"\"%s\":%d:\t"RESET_COLOR,b.BNAME,b.ID_BLOC);}	//Dossier			
 		 vide=0;
 		}
 	i++;
 	
 	}
-    if(vide) {printf("Le dossier '%s' est vide !\n",bloc.NOM_BLOC);}
+    if(vide) {printf("Le dossier '%s' est vide !\n",bloc.BNAME);}
 	else {printf("\n");}
 }
 
@@ -96,7 +96,7 @@ void pwd(int partition, int currDir)
 	Bloc bloc=READ(partition, currDir);
 	if(bloc.PERE !=-1)
 	{   recNamePath(partition, bloc.PERE);
-		printf("/%s",bloc.NOM_BLOC);
+		printf("/%s",bloc.BNAME);
 	}
 	printf("$>");
 }
@@ -180,7 +180,7 @@ int past(int partition, int RepertoirPere, int original_ID)
 	if(elementExistsInFolder(partition,RepertoirPere, nom) == -1)  
 	{
        Bloc original= READ(partition, original_ID);
-       printf("L'élément collé dans ce répertoir est le %s : %s\n",original.FICHIER_DOSSIER?"Fichier":"Dossier", original.NOM_BLOC);
+       printf("L'élément collé dans ce répertoir est le %s : %s\n",original.FICHIER_DOSSIER?"Fichier":"Dossier", original.BNAME);
         //addLink(partition, currDir,  IDCopie);
       if(original.FICHIER_DOSSIER)
       {

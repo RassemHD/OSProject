@@ -55,7 +55,7 @@ void blocName(int partition, int nB, char blocName[DIM_NAME_FILE])
 {
 	Bloc bloc = READ (partition,nB);
 
-	strcpy( blocName, bloc.NOM_BLOC);
+	strcpy( blocName, bloc.BNAME);
 
 }
 
@@ -70,7 +70,7 @@ void rmvFile(int partition,  int dirP, int nB)
 
 	bloc.LIBRE = 1; 
 	bloc.BLOC_SUIVANT = -1;
-	strcpy(bloc.NOM_BLOC, "");
+	strcpy(bloc.BNAME, "");
 	memcpy(bloc.LIENS, tab_init, sizeof(tab_init));
 	WRITE(partition, nB, bloc);
 	
@@ -159,7 +159,7 @@ void recNamePath(int partition, int RepertoirCourant)
 Bloc bloc=READ(partition, RepertoirCourant);
 if(bloc.PERE !=-1)
 {   recNamePath(partition, bloc.PERE);
-	printf("/%s",bloc.NOM_BLOC);
+	printf("/%s",bloc.BNAME);
 }
 
 }
@@ -182,7 +182,7 @@ int pastFolder(int partition, int RepertoirPere, int original_ID)
 	copie.BLOC_SUIVANT=-1;
 	copie.PERE=RepertoirPere;
 	memcpy(copie.LIENS, tab_init, sizeof(tab_init));
-	strcpy(copie.NOM_BLOC,original.NOM_BLOC);
+	strcpy(copie.BNAME,original.BNAME);
 	WRITE(partition, id, copie);
 	 while(i<=14)
 	 {

@@ -28,7 +28,7 @@ Bloc InitBloc(int fd, int id, int libre, int suiv, char nom[DIM_NAME_FILE], char
  Bloc bloc;
  bloc.FICHIER_DOSSIER =fd ;  bloc.ID_BLOC=id; 
  bloc.LIBRE=libre; bloc.BLOC_SUIVANT=suiv; 
- strcpy(bloc.NOM_BLOC, nom);
+ strcpy(bloc.BNAME, nom);
  memcpy(bloc.LIENS, tab_init, sizeof(tab_init));
  bloc.PERE = pere;
  return bloc;
